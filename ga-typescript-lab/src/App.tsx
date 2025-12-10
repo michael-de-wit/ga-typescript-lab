@@ -21,7 +21,7 @@ function App() {
       console.log(samplesWithHRbpm[i]);
       // Add to state array
       setHrHistory(prev => [...prev, samplesWithHRbpm[i]]);
-      await new Promise(resolve => setTimeout(resolve, delaySeconds * 1000));
+      await new Promise(resolve => setTimeout(resolve, delaySeconds * 100));
     }
 
     setIsRunning(false);
@@ -37,7 +37,7 @@ function App() {
 
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
-          data={hrHistory}
+          data={hrHistory.slice(-300)}
           margin={{
             top: 5,
             right: 30,
@@ -49,10 +49,10 @@ function App() {
           <XAxis />
           {/* Update YAxis label and dataKey to use 'HRbpm' */}
           <YAxis domain={['dataMin - 10', 'dataMax + 10']} label={{ value: 'HR (BPM)', angle: -90, position: 'insideLeft' }} />
-          <Tooltip />
+          
           <Legend />
           {/* Update dataKey to 'HRbpm' */}
-          <Line type="monotone" dataKey="HRbpm" stroke="#8884d8" activeDot={{ r: 8 }} />
+          <Line type="monotone" dataKey="HRbpm" stroke="#8884d8" dot={false} activeDot={{ r: 8 }} />
         </LineChart>
       </ResponsiveContainer>
 
