@@ -21,7 +21,7 @@ function App() {
       console.log(samplesWithHRbpm[i]);
       // Add to state array
       setHrHistory(prev => [...prev, samplesWithHRbpm[i]]);
-      await new Promise(resolve => setTimeout(resolve, delaySeconds * 100));
+      await new Promise(resolve => setTimeout(resolve, delaySeconds * 1000));
     }
 
     setIsRunning(false);
@@ -37,7 +37,7 @@ function App() {
 
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
-          data={hrHistory.slice(-300)}
+          data={hrHistory.slice(-200)}
           margin={{
             top: 5,
             right: 30,
