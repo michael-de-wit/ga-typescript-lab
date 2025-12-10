@@ -1,45 +1,42 @@
-// import { useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
+import samplesWithHR from './datahandler';
+import type { HRSample } from './datahandler';
 
 function App() {
+  const [hrHistory, setHrHistory] = useState<HRSample[]>([]);
+  const [isRunning, setIsRunning] = useState(false);
   
-  // const message: string = "Hello World!";
-  // const messageLC = message.toLowerCase();
-  // Calling 'message'
-  // console.log(messageLC)
-
-  // function printName(obj: { first: string; middle?: string; last?: string }): [string,string?,string?] {
+  async function simulateRealTimeHR(delaySeconds: number) {
+    setIsRunning(true);
+    setHrHistory([]); // Clear previous data
     
-  //   return [obj.first, obj.middle, obj.last]
-  // }
-
-  // const result1 = printName({ first: "Bob" });
-  // console.log(result1);
-  // const result2 = printName({ first: "Alice", last: "Alisson" });
-  // console.log(result2);
-  // const result3 = printName({ first: "Johnny", middle: "Cash", last: "Money" });
-  // console.log(result3);
-
-  interface Person {
-    first:string;
-    middle?:string;
-    last?:string;
+    for (let i = 0; i < samplesWithHR.length; i++) {
+      console.log(samplesWithHR[i]);
+      // Add to state array
+      setHrHistory(prev => [...prev, samplesWithHR[i]]);
+      await new Promise(resolve => setTimeout(resolve, delaySeconds * 1000));
+    }
+    
+    setIsRunning(false);
   }
-
-  function printNameV2(person: Person) {
-    return person
-  }
-
-    const resultV22 = printNameV2({ first: "Johnny", last: "Cash" });
-    console.log(resultV22);
-    const resultV23 = printNameV2({ first: "Johnny", middle: "Cash", last: "Money" });
-    console.log(resultV23);
-
+  
   return (
     <>
-        <h1>Test</h1>
+      <h1>Heart Rate Monitor</h1>
+      <button onClick={() => simulateRealTimeHR(1)} disabled={isRunning}>
+        {isRunning ? 'Running...' : 'Start'}
+      </button>
+      <p>Collected {hrHistory.length} of {samplesWithHR.length} samples</p>
+      
+      <h2>History (Last 10)</h2>
+      <ul>
+        {hrHistory.slice(-10).map((sample, index) => (
+          <li key={index}>HR: {sample.HR.toFixed(2)}</li>
+        ))}
+      </ul>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
